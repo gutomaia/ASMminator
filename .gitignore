@@ -1,0 +1,10 @@
+*.py[cod]
+.checkpoint/
+.downloads/
+.tools/
+__pycache__/
+build/
+dist/
+pyinstaller.mk
+python.mk
+venv/
