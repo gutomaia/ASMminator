@@ -27,7 +27,7 @@ class Py65CPUBridge(object):
         self.cpu.pc = counter
 
     def memory_set(self, pos, val):
-        print('memory_set {:04x}, {:04x}'.format(pos, val))
+        print('memory_set {:04x}, {:02x}'.format(pos, val))
         self.cpu.memory[pos] = val
 
     def memory_fetch(self, pos):

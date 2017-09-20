@@ -42,11 +42,11 @@ class AsmScene(Py65CPUBridge, SceneBase):
     def __init__(self):
         self.next = self
         self.cpu = MPU()
-        self.start_addr = 0x1000
-        self.stop_addr = 0x1000
+        self.start_addr = 0xC000
+        self.stop_addr = 0xC000
 
     def input_code(self, source):
-        opcodes = assembly(source)
+        opcodes = assembly(source, self.start_addr)
         self.cpu_pc(self.start_addr)
         for addr, val in enumerate(opcodes, start=self.start_addr):
             self.memory_set(addr, val)
