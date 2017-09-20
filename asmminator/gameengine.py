@@ -42,8 +42,8 @@ class AsmScene(Py65CPUBridge, SceneBase):
         self.stop_addr = 0
 
     def input_code(self, source):
+        addr = 0
         self.start_addr = 0xC000
-        self.stop_addr = 0xC000
         opcodes = assembly(source, self.start_addr)
         self.cpu_pc(self.start_addr)
         for addr, val in enumerate(opcodes, start=self.start_addr):
