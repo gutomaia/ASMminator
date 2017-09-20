@@ -42,7 +42,6 @@ class Py65CPUBridge(object):
         print('cpu_set_register {}, {:02x}'.format(register, value))
         name = REGISTERS[register]
         setattr(self.cpu, name, value)
-        print(self.cpu)
 
     def cpu_register(self, register):
         name = REGISTERS[register]

@@ -1,21 +1,24 @@
 from ui import PygameDisplay
 import pygame
+from nesasm.compiler import lexical, semantic, syntax, Cartridge
+from bridge import Py65CPUBridge
+from py65.devices.mpu6502 import MPU
+
+
+def assembly(source, start_addr=0):
+    cart = Cartridge()
+    if start_addr != 0:
+      cart.set_org(start_addr)
+    return semantic(syntax(lexical(source)), False, cart)
 
 
 class SceneBase(object):
 
     def __init__(self):
         self.next = self
-        self.context = {}
 
     def input_code(self, source):
-        try:
-            compiled = compile(source, '<string>', 'exec') # gives syntax error
-            exec(compiled, self.context) # gives generic exceptions
-        except SyntaxError, e:
-            print 'syntax error', e
-        except Exception, e:
-            print 'exception', e
+        pass
 
     def update(self, deltaTime):
         pass
@@ -30,6 +33,30 @@ class SceneBase(object):
         self.go_to_scene(None)
 
 
+class MemoryInterface(object):
+    pass
+
+
+class AsmScene(Py65CPUBridge, SceneBase):
+
+    def __init__(self):
+        self.next = self
+        self.cpu = MPU()
+        self.start_addr = 0x1000
+        self.stop_addr = 0x1000
+
+    def input_code(self, source):
+        opcodes = assembly(source)
+        self.cpu_pc(self.start_addr)
+        for addr, val in enumerate(opcodes, start=self.start_addr):
+            self.memory_set(addr, val)
+        self.stop_addr = addr
+
+    def update(self, deltaTime):
+        if self.cpu.pc < self.stop_addr:
+            self.execute()
+
+
 class DisplayScene(PygameDisplay):
 
     def __init__(self, parent, ID, starting_scene=None):
@@ -39,7 +66,7 @@ class DisplayScene(PygameDisplay):
 
 
         if not starting_scene:
-            self.active_scene = TitleScene()
+            self.active_scene = AsmScene()
         else:
             self.active_scene = starting_scene
 
@@ -47,34 +74,3 @@ class DisplayScene(PygameDisplay):
         self.active_scene.update(deltaTime)
         self.active_scene.render(self.screen)
         self.active_scene = self.active_scene.next
-
-class TitleScene(SceneBase):
-    def __init__(self):
-        SceneBase.__init__(self)
-
-    def process_input(self, events, pressed_keys):
-        for event in events:
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-                # Move to the next scene when the user pressed Enter
-                self.go_to_scene(GameScene())
-
-    def update(self, deltaTime):
-        pass
-
-    def render(self, screen):
-        # For the sake of brevity, the title scene is a blank red screen
-        screen.fill((255, 0, 0))
-
-class GameScene(SceneBase):
-    def __init__(self):
-        SceneBase.__init__(self)
-
-    def process_input(self, events, pressed_keys):
-        pass
-
-    def update(self, deltaTime):
-        pass
-
-    def render(self, screen):
-        # The game scene is just a blank blue screen
-        screen.fill((0, 0, 255))
