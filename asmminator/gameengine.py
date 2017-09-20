@@ -59,12 +59,17 @@ class Level1(AsmScene):
 
     def __init__(self):
         super(Level1, self).__init__()
+        self.position = [100, 100]
 
     def update(self, deltaTime):
         super(Level1, self).update(deltaTime)
         if self.memory_fetch(0x0010) == 0x0001:
-            print 'going right'
+            self.position[0] += 1
             self.memory_set(0x0010, 0x00)
+
+    def render(self, screen):
+        screen.fill((0, 0, 0))
+        pygame.draw.circle(screen, (0, 255, 0), self.position, 5)
 
 
 
@@ -72,9 +77,6 @@ class DisplayScene(PygameDisplay):
 
     def __init__(self, parent, ID, starting_scene=None):
         super(DisplayScene, self).__init__(parent, ID)
-        import sys
-        # pygame.init()
-
 
         if not starting_scene:
             self.active_scene = Level1()
