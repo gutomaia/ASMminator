@@ -33,19 +33,17 @@ class SceneBase(object):
         self.go_to_scene(None)
 
 
-class MemoryInterface(object):
-    pass
-
-
 class AsmScene(Py65CPUBridge, SceneBase):
 
     def __init__(self):
         self.next = self
         self.cpu = MPU()
-        self.start_addr = 0xC000
-        self.stop_addr = 0xC000
+        self.start_addr = 0
+        self.stop_addr = 0
 
     def input_code(self, source):
+        self.start_addr = 0xC000
+        self.stop_addr = 0xC000
         opcodes = assembly(source, self.start_addr)
         self.cpu_pc(self.start_addr)
         for addr, val in enumerate(opcodes, start=self.start_addr):
@@ -57,6 +55,19 @@ class AsmScene(Py65CPUBridge, SceneBase):
             self.execute()
 
 
+class Level1(AsmScene):
+
+    def __init__(self):
+        super(Level1, self).__init__()
+
+    def update(self, deltaTime):
+        super(Level1, self).update(deltaTime)
+        if self.memory_fetch(0x0010) == 0x0001:
+            print 'going right'
+            self.memory_set(0x0010, 0x00)
+
+
+
 class DisplayScene(PygameDisplay):
 
     def __init__(self, parent, ID, starting_scene=None):
@@ -66,7 +77,7 @@ class DisplayScene(PygameDisplay):
 
 
         if not starting_scene:
-            self.active_scene = AsmScene()
+            self.active_scene = Level1()
         else:
             self.active_scene = starting_scene
 
