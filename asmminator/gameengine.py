@@ -59,18 +59,30 @@ class Level1(AsmScene):
 
     def __init__(self):
         super(Level1, self).__init__()
-        self.position = [100, 100]
+        self.aim = [100, 100]
+        self.target = [400, 100]
 
     def update(self, deltaTime):
         super(Level1, self).update(deltaTime)
         if self.memory_fetch(0x0010) == 0x0001:
-            self.position[0] += 1
+            self.aim[0] += 1
             self.memory_set(0x0010, 0x00)
+
+        if self.aim == self.target:
+            self.go_to_scene(Goal())
+
 
     def render(self, screen):
         screen.fill((0, 0, 0))
-        pygame.draw.circle(screen, (0, 255, 0), self.position, 5)
+        pygame.draw.circle(screen, (255, 0, 0), self.aim, 5)
+        pygame.draw.circle(screen, (0, 255, 0), self.target, 5)
 
+
+
+class Goal(AsmScene):
+
+    def render(self, screen):
+        screen.fill((0, 255, 0))
 
 
 class DisplayScene(PygameDisplay):
