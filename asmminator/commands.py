@@ -28,6 +28,8 @@ class Run(Command):
         self.ui = ui
 
     def execute(self, event):
+        self.ui.display.active_scene.paused = False
+        self.ui.display.active_scene.step = False
         source = self.ui.editor.GetText()
         self.ui.display.active_scene.input_code(source)
 
@@ -43,6 +45,19 @@ class Pause(Command):
         self.ui.display.active_scene.paused = not self.ui.display.active_scene.paused
 
 
+class Step(Command):
+    _label = 'Step'
+    _icon_image = 'assets/icons/step_forward.png'
+
+    def __init__(self, ui):
+        self.ui = ui
+
+    def execute(self, event):
+        self.ui.display.active_scene.paused = True
+        self.ui.display.active_scene.step = True
+
+
 commands = {}
 commands['run'] = Run
 commands['pause'] = Pause
+commands['step'] = Step

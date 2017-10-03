@@ -65,7 +65,8 @@ ${DOWNLOAD_PATH}/wxpython.installed: ${PYTHON_EXE} ${DOWNLOAD_PATH}/${WXPYTHON_I
 build_tools: tools/pyinstaller-${PYINSTALLER_VERSION}/pyinstaller.py
 
 images: assets/icons/play.png \
-	assets/icons/pause.png
+	assets/icons/pause.png \
+	assets/icons/step_forward.png
 
 build: python_build images
 
@@ -115,6 +116,13 @@ assets/icons/pause.png: ${TOOLS_PATH}/glyphicons_free/.done assets/icons/.done
 	@find ${TOOLS_PATH}/glyphicons_free/ -type f  -iname *.png | grep -P 'glyphicons\-\d+\-pause\.png' | \
 		xargs -I []	cp [] $@
 	${CHECK}
+
+assets/icons/step_forward.png: ${TOOLS_PATH}/glyphicons_free/.done assets/icons/.done
+	@echo "Copping $@: \c"
+	@find ${TOOLS_PATH}/glyphicons_free/ -type f  -iname *.png | grep -P 'glyphicons\-\d+\-step\-forward\.png' | \
+		xargs -I []	cp [] $@
+	${CHECK}
+
 
 windows: ${PYINSTALLER} ${PYTHON_EXE} ${WINDOWS_BINARIES} ${TOOLS_PATH}/requirements.windows.check ${DOWNLOAD_PATH}/pygame.installed ${DOWNLOAD_PATH}/wxpython.installed
 	@rm -rf dist/windows
