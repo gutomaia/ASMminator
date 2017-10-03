@@ -69,6 +69,9 @@ build: python_build
 run: build
 	${VIRTUALENV} ${PYTHON} ${PYTHON_MODULES}/app.py
 
+run_win:
+	@wine ${PYTHON_EXE} ${PYTHON_MODULES}/app.py
+
 dist/darwin/${PYTHON_MODULES}: ${PYINSTALLER}
 	${PYTHON} -O ${PYINSTALLER} --onedir  ${PYTHON_MODULES}.darwin.spec
 
@@ -79,6 +82,9 @@ windows: ${PYINSTALLER} ${PYTHON_EXE} ${WINDOWS_BINARIES} ${TOOLS_PATH}/requirem
 	@rm -rf dist/windows
 	@mkdir -p dist/windows
 	@wine ${PYTHON_EXE} ${PYINSTALLER} --onefile ${PYTHON_MODULES}.windows.spec --distpath dist/windows
+
+run_dwin: windows
+	cd dist/windows/asmminator && wine asmminator.exe
 
 dist/asmminator.zip: windows
 	cd dist/windows && \
