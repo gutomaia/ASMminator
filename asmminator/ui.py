@@ -106,8 +106,11 @@ class Frame(wx.Frame):
     def init_toolbar(self):
         # self.toolbar = self.CreateToolBar(wx.TB_TEXT, wx.TB_NOICONS, -1)
         self.toolbar = self.CreateToolBar()
-        run = self.toolbar.AddLabelTool(wx.ID_ANY, 'Run', wx.Bitmap('assets/icons/run.png'))
-        self.Bind(wx.EVT_TOOL, self.run_command, run)
+        from commands import commands
+        for Command in commands.values():
+            command = Command(self)
+            command.attach(self.toolbar, self)
+
         self.toolbar.Realize()
 
     def run_command(self, event):
