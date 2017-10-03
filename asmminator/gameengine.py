@@ -40,6 +40,7 @@ class AsmScene(Py65CPUBridge, SceneBase):
         self.cpu = MPU()
         self.start_addr = 0
         self.stop_addr = 0
+        self.paused = False
 
     def input_code(self, source):
         addr = 0
@@ -51,7 +52,7 @@ class AsmScene(Py65CPUBridge, SceneBase):
         self.stop_addr = addr
 
     def update(self, deltaTime):
-        if self.cpu.pc < self.stop_addr:
+        if self.cpu.pc < self.stop_addr and not self.paused:
             self.execute()
 
 

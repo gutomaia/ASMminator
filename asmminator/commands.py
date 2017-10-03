@@ -31,5 +31,17 @@ class Run(Command):
         self.ui.display.active_scene.input_code(source)
 
 
+class Pause(Command):
+    _label = 'Pause'
+    _icon_image = 'assets/icons/run.png'
+
+    def __init__(self, ui):
+        self.ui = ui
+
+    def execute(self, event):
+        self.ui.display.active_scene.paused = not self.ui.display.active_scene.paused
+
+
 commands = {}
 commands['run'] = Run
+commands['pause'] = Pause
