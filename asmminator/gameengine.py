@@ -36,7 +36,7 @@ class SceneBase(object):
 class AsmScene(Py65CPUBridge, SceneBase):
 
     def __init__(self):
-        self.next = self
+        super(AsmScene, self).__init__()
         self.cpu = MPU()
         self.start_addr = 0
         self.stop_addr = 0
