@@ -13,10 +13,21 @@ exe = EXE(pyz,
           upx=True,
           console=False )
 
-from os import listdir
-from os.path import isfile, join
+import fnmatch
+import os
+
+assets = []
 assets_path = './assets'
-assets = [('assets/%s' % f, assets_path + '/' + f, 'DATA') for f in listdir(assets_path) if isfile(join(assets_path, f))]
+for root, dirnames, filenames in os.walk(assets_path):
+    for filename in fnmatch.filter(filenames, '*'):
+        assets.append(
+            (
+                os.path.join(root, filename),
+                os.path.join(root[2:], filename),
+                'DATA'
+            )
+        )
+
 a.datas.extend(assets)
 
 coll = COLLECT(exe,
