@@ -95,19 +95,22 @@ ${TOOLS_PATH}/glyphicons_free/.done: ${DOWNLOAD_PATH}/glyphicons_free.zip
 		cd .. && touch $@
 	${CHECK}
 
-assets/icons/fast_backward.png: ${TOOLS_PATH}/glyphicons_free/.done
+assets/icons/.done:
+	@mkdir -p assets/icons && touch $@
+
+assets/icons/fast_backward.png: ${TOOLS_PATH}/glyphicons_free/.done assets/icons/.done
 	@echo "Copping $@: \c"
 	@find ${TOOLS_PATH}/glyphicons_free/ -type f  -iname *.png | grep -P 'glyphicons\-\d+\-fast.backward\.png' | \
 		xargs -I []	cp [] $@
 	${CHECK}
 
-assets/icons/play.png: ${TOOLS_PATH}/glyphicons_free/.done
+assets/icons/play.png: ${TOOLS_PATH}/glyphicons_free/.done assets/icons/.done
 	@echo "Copping $@: \c"
 	@find ${TOOLS_PATH}/glyphicons_free/ -type f  -iname *.png | grep -P 'glyphicons\-\d+\-play\.png' | \
 		xargs -I []	cp [] $@
 	${CHECK}
 
-assets/icons/pause.png: ${TOOLS_PATH}/glyphicons_free/.done
+assets/icons/pause.png: ${TOOLS_PATH}/glyphicons_free/.done assets/icons/.done
 	@echo "Copping $@: \c"
 	@find ${TOOLS_PATH}/glyphicons_free/ -type f  -iname *.png | grep -P 'glyphicons\-\d+\-pause\.png' | \
 		xargs -I []	cp [] $@
@@ -130,6 +133,7 @@ dist: windows
 distribute: dist/asmminator.zip
 
 clean: python_clean
+	@rm -rf assets/icons
 	@rm -rf tools
 	@rm -rf reports
 
