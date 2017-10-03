@@ -64,7 +64,10 @@ ${DOWNLOAD_PATH}/wxpython.installed: ${PYTHON_EXE} ${DOWNLOAD_PATH}/${WXPYTHON_I
 
 build_tools: tools/pyinstaller-${PYINSTALLER_VERSION}/pyinstaller.py
 
-build: python_build
+images: assets/icons/play.png \
+	assets/icons/pause.png
+
+build: python_build images
 
 run: build
 	${VIRTUALENV} ${PYTHON} ${PYTHON_MODULES}/app.py
@@ -77,6 +80,38 @@ dist/darwin/${PYTHON_MODULES}: ${PYINSTALLER}
 
 dist/linux/${PYTHON_MODULES}: ${PYINSTALLER}
 	${PYTHON} -O ${PYINSTALLER} --onedir  ${PYTHON_MODULES}.linux.spec
+
+${DOWNLOAD_PATH}/glyphicons_free.zip: ${DOWNLOAD_PATH}/.done
+	@echo "Downloading glyphicons_free.zip: \c"
+	@cd ${DOWNLOAD_PATH} && \
+		${WGET} http://glyphicons.com/files/glyphicons_free.zip
+	${CHECK}
+	@touch $@
+
+${TOOLS_PATH}/glyphicons_free/.done: ${DOWNLOAD_PATH}/glyphicons_free.zip
+	@echo "Unpacking glyphicons_free.zip: \c"
+	@cd ${TOOLS_PATH} && \
+		unzip -qq ../${DOWNLOAD_PATH}/glyphicons_free.zip && \
+		cd .. && touch $@
+	${CHECK}
+
+assets/icons/fast_backward.png: ${TOOLS_PATH}/glyphicons_free/.done
+	@echo "Copping $@: \c"
+	@find ${TOOLS_PATH}/glyphicons_free/ -type f  -iname *.png | grep -P 'glyphicons\-\d+\-fast.backward\.png' | \
+		xargs -I []	cp [] $@
+	${CHECK}
+
+assets/icons/play.png: ${TOOLS_PATH}/glyphicons_free/.done
+	@echo "Copping $@: \c"
+	@find ${TOOLS_PATH}/glyphicons_free/ -type f  -iname *.png | grep -P 'glyphicons\-\d+\-play\.png' | \
+		xargs -I []	cp [] $@
+	${CHECK}
+
+assets/icons/pause.png: ${TOOLS_PATH}/glyphicons_free/.done
+	@echo "Copping $@: \c"
+	@find ${TOOLS_PATH}/glyphicons_free/ -type f  -iname *.png | grep -P 'glyphicons\-\d+\-pause\.png' | \
+		xargs -I []	cp [] $@
+	${CHECK}
 
 windows: ${PYINSTALLER} ${PYTHON_EXE} ${WINDOWS_BINARIES} ${TOOLS_PATH}/requirements.windows.check ${DOWNLOAD_PATH}/pygame.installed ${DOWNLOAD_PATH}/wxpython.installed
 	@rm -rf dist/windows

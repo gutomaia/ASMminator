@@ -3,6 +3,7 @@
 .downloads/
 .tools/
 __pycache__/
+assets/icons/
 build/
 dist/
 pyinstaller.mk

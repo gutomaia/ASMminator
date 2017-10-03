@@ -19,9 +19,10 @@ class Command(object):
         command = toolbar.AddLabelTool(wx.ID_ANY, self._label, self.icon)
         ui.Bind(wx.EVT_TOOL, self.execute, command)
 
+
 class Run(Command):
     _label = 'Run'
-    _icon_image = 'assets/icons/run.png'
+    _icon_image = 'assets/icons/play.png'
 
     def __init__(self, ui):
         self.ui = ui
@@ -33,7 +34,7 @@ class Run(Command):
 
 class Pause(Command):
     _label = 'Pause'
-    _icon_image = 'assets/icons/run.png'
+    _icon_image = 'assets/icons/pause.png'
 
     def __init__(self, ui):
         self.ui = ui
