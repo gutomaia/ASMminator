@@ -1,4 +1,5 @@
 import wx, sys, os, pygame
+from collections import OrderedDict
 
 ### PYGAME IN WX ###
 # A simple test of embedding Pygame in a wxPython frame
@@ -76,23 +77,17 @@ class Frame(wx.Frame):
     def init_menubar(self):
         self.menubar = wx.MenuBar()
 
-        fileMenu = wx.Menu()
-        runMenu = wx.Menu()
-        helpMenu = wx.Menu()
-
-        menus = {
-            '&File': fileMenu,
-            '&Run': runMenu,
-            '&Help': helpMenu,
-        }
+        menus = OrderedDict()
+        menus['&File'] = wx.Menu()
+        menus['&Run'] = wx.Menu()
+        menus['&Help'] = wx.Menu()
 
         for command in self.commands:
             if command._menu and command._menu[0] in menus.keys():
                 command.attach(menus[command._menu[0]], self)
 
-        self.menubar.Append(fileMenu, '&File')
-        self.menubar.Append(runMenu, '&Run')
-        self.menubar.Append(helpMenu, '&Help')
+        for label, menu in menus.iteritems():
+            self.menubar.Append(menu, label)
 
         self.SetMenuBar(self.menubar)
         self.Bind(wx.EVT_MENU, self.menuhandler)
