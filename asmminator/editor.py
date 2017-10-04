@@ -49,12 +49,6 @@ class SourceEditor(stc.StyledTextCtrl):
 
 class ASMLexter(object):
 
-    def __init__(self):
-        super(ASMLexter, self).__init__()
-        self._kw = ('ADC|AND|ASL|BCC|BCS|BEQ|BIT|BMI|BNE|BPL|BRK|BVC|BVS|CLC|'
-                'CLD|CLI|CLV|CMP|CPX|CPY|DEC|DEX|DEY|EOR|INC|INX|INY|JMP|JSR|'
-                'LDA|LDX|LDY|LSR|NOP|ORA|PHA|PHP|PLA|PLP|ROL|ROR|RTI|RTS|SBC|'
-                'SEC|SED|SEI|STA|STX|STY|TAX|TAY|TSX|TXA|TXS|TYA').split('|')
 
     def StyleText(self, event):
         buff = event.EventObject
