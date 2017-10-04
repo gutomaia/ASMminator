@@ -7,6 +7,7 @@ class Command(object):
     _icon_image = None
     _label = 'command'
     _toolbar = False
+    _menu = None
 
     def __init__(self, ui):
         self.ui = ui
@@ -20,15 +21,42 @@ class Command(object):
     def execute(self, event):
         pass
 
-    def attach(self, toolbar, ui):
-        command = toolbar.AddLabelTool(wx.ID_ANY, self._label, self.icon)
-        ui.Bind(wx.EVT_TOOL, self.execute, command)
+    def attach(self, element, ui):
+        if isinstance(element, wx.ToolBar):
+            tool = element.AddLabelTool(wx.ID_ANY, self._label, self.icon)
+            ui.Bind(wx.EVT_TOOL, self.execute, tool)
+        elif isinstance(element, wx.Menu):
+            menuitem = wx.MenuItem(element, self._menu_id, self._menu_label)
+            element.AppendItem(menuitem)
+
+
+class Quit(Command):
+    _label = 'Quit'
+    _toolbar = False
+    _menu = ('&File', 1)
+    _menu_id = wx.ID_EXIT
+    _menu_label = '&Quit\tCtrl+Q'
+
+    def execute(self, event):
+        self.ui.Kill(event)
+
+
+class About(Command):
+    _label = 'About'
+    _toolbar = False
+    _menu = ('&Help', 0)
+    _menu_id = 12753
+    _menu_label = 'About'
 
 
 class Run(Command):
     _label = 'Run'
     _icon_image = 'assets/icons/play.png'
     _toolbar = True
+    _menu = ('&Run', 1)
+    _menu_id = 12754
+    _menu_label = '&Run\tCtrl+R'
+
 
     def execute(self, event):
         self.ui.display.active_scene.paused = False
@@ -41,6 +69,10 @@ class Pause(Command):
     _label = 'Pause'
     _icon_image = 'assets/icons/pause.png'
     _toolbar = True
+    _menu = ('&Run', 1)
+    _menu_id = 12754
+    _menu_label = 'Pause'
+
 
     def execute(self, event):
         self.ui.display.active_scene.paused = not self.ui.display.active_scene.paused
@@ -50,6 +82,9 @@ class Step(Command):
     _label = 'Step'
     _icon_image = 'assets/icons/step_forward.png'
     _toolbar = True
+    _menu = ('&Run', 1)
+    _menu_id = 12755
+    _menu_label = 'Step'
 
     def execute(self, event):
         self.ui.display.active_scene.paused = True
@@ -57,6 +92,8 @@ class Step(Command):
 
 
 commands = OrderedDict()
+commands['Quit'] = Quit
+commands['About'] = About
 commands['run'] = Run
 commands['pause'] = Pause
 commands['step'] = Step

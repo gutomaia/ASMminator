@@ -70,7 +70,6 @@ class PygameDisplay(wx.Window):
         self.Unbind(event = wx.EVT_PAINT, handler = self.OnPaint)
         self.Unbind(event = wx.EVT_TIMER, handler = self.Update, source = self.timer)
 
-ID_ABOUT = 12753
 
 class Frame(wx.Frame):
 
@@ -78,30 +77,25 @@ class Frame(wx.Frame):
         self.menubar = wx.MenuBar()
 
         fileMenu = wx.Menu()
-
-        newitem = wx.MenuItem(fileMenu, wx.ID_NEW, text='New', kind = wx.ITEM_NORMAL)
-        fileMenu.AppendItem(newitem)
-
-        fileMenu.AppendSeparator()
-
-        quit = wx.MenuItem(fileMenu, wx.ID_EXIT, '&Quit\tCtrl+Q')
-        fileMenu.AppendItem(quit)
-
+        runMenu = wx.Menu()
         helpMenu = wx.Menu()
-        aboutItem = wx.MenuItem(helpMenu, ID_ABOUT, text='About', kind = wx.ITEM_NORMAL)
-        helpMenu.AppendItem(aboutItem)
+
+        menus = {
+            '&File': fileMenu,
+            '&Run': runMenu,
+            '&Help': helpMenu,
+        }
+
+        for command in self.commands:
+            if command._menu and command._menu[0] in menus.keys():
+                command.attach(menus[command._menu[0]], self)
 
         self.menubar.Append(fileMenu, '&File')
+        self.menubar.Append(runMenu, '&Run')
         self.menubar.Append(helpMenu, '&Help')
-
 
         self.SetMenuBar(self.menubar)
         self.Bind(wx.EVT_MENU, self.menuhandler)
-
-        from commands import commands
-        self.commands = []
-        for Command in commands.values():
-            self.commands.append(Command(self))
 
     def menuhandler(self, event):
         menu_id = event.GetId()
@@ -130,6 +124,11 @@ class Frame(wx.Frame):
     def __init__(self, parent):
         wx.Frame.__init__(self, parent, -1, size = (600, 600))
         self.SetTitle("ASMminator")
+
+        from commands import commands
+        self.commands = []
+        for Command in commands.values():
+            self.commands.append(Command(self))
 
         self.init_menubar()
         self.init_toolbar()
