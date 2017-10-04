@@ -1,15 +1,7 @@
 from ui import PygameDisplay
 import pygame
-from nesasm.compiler import lexical, semantic, syntax, Cartridge
 from bridge import Py65CPUBridge
 from py65.devices.mpu6502 import MPU
-
-
-def assembly(source, start_addr=0):
-    cart = Cartridge()
-    if start_addr != 0:
-      cart.set_org(start_addr)
-    return semantic(syntax(lexical(source)), False, cart)
 
 
 class SceneBase(object):
@@ -17,7 +9,7 @@ class SceneBase(object):
     def __init__(self):
         self.next = self
 
-    def input_code(self, source):
+    def input_opcodes(self, source, start_addr=0x00):
         pass
 
     def update(self, deltaTime):
@@ -43,10 +35,9 @@ class AsmScene(Py65CPUBridge, SceneBase):
         self.paused = False
         self.step = False
 
-    def input_code(self, source):
+    def input_opcodes(self, opcodes, start_addr=0xC000):
         addr = 0
-        self.start_addr = 0xC000
-        opcodes = assembly(source, self.start_addr)
+        self.start_addr = start_addr
         self.cpu_pc(self.start_addr)
         for addr, val in enumerate(opcodes, start=self.start_addr):
             self.memory_set(addr, val)

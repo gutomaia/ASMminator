@@ -1,5 +1,6 @@
 import wx
 from collections import OrderedDict
+from nesasm.compiler import lexical, semantic, syntax, Cartridge
 
 
 class Command(object):
@@ -49,6 +50,20 @@ class About(Command):
     _menu_label = 'About'
 
 
+class Compile(Command):
+    _label = 'Compile'
+    _toolbar = False
+
+    def execute(self, event):
+        source = self.ui.editor.GetText()
+        start_addr = 0xC000
+        cart = Cartridge()
+        if start_addr != 0:
+            cart.set_org(start_addr)
+            opcodes = semantic(syntax(lexical(source)), False, cart)
+            self.ui.display.active_scene.input_opcodes(opcodes, 0xC000)
+
+
 class Run(Command):
     _label = 'Run'
     _icon_image = 'assets/icons/play.png'
@@ -61,8 +76,7 @@ class Run(Command):
     def execute(self, event):
         self.ui.display.active_scene.paused = False
         self.ui.display.active_scene.step = False
-        source = self.ui.editor.GetText()
-        self.ui.display.active_scene.input_code(source)
+        self.ui.commands['compile'].execute(event)
 
 
 class Pause(Command):
@@ -94,6 +108,7 @@ class Step(Command):
 commands = OrderedDict()
 commands['Quit'] = Quit
 commands['About'] = About
+commands['compile'] = Compile
 commands['run'] = Run
 commands['pause'] = Pause
 commands['step'] = Step

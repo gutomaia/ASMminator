@@ -82,7 +82,7 @@ class Frame(wx.Frame):
         menus['&Run'] = wx.Menu()
         menus['&Help'] = wx.Menu()
 
-        for command in self.commands:
+        for command in self.commands.values():
             if command._menu and command._menu[0] in menus.keys():
                 command.attach(menus[command._menu[0]], self)
 
@@ -100,7 +100,7 @@ class Frame(wx.Frame):
     def init_toolbar(self):
         # self.toolbar = self.CreateToolBar(wx.TB_TEXT, wx.TB_NOICONS, -1)
         self.toolbar = self.CreateToolBar()
-        for command in self.commands:
+        for command in self.commands.values():
             if command._toolbar:
                 command.attach(self.toolbar, self)
         self.toolbar.Realize()
@@ -121,9 +121,9 @@ class Frame(wx.Frame):
         self.SetTitle("ASMminator")
 
         from commands import commands
-        self.commands = []
-        for Command in commands.values():
-            self.commands.append(Command(self))
+        self.commands = OrderedDict()
+        for label, Command in commands.iteritems():
+            self.commands[label] = Command(self)
 
         self.init_menubar()
         self.init_toolbar()
