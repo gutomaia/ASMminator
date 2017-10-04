@@ -1,7 +1,17 @@
 import wx
 import wx.stc as stc
+from nesasm.compiler import asm65_tokens
+from re import match
 
-STYLE_DEFAULT, STYLE_INSTRUCTION = range(2)
+
+STYLE_DEFAULT = 0
+STYLE_INSTRUCTION = 1
+STYLE_ADDRESS = 2
+STYLE_HEX_NUMBER = 3
+STYLE_BINARY_NUMBER = 4
+STYLE_DECIMAL_NUMBER = 5
+STYLE_LABEL = 6
+STYLE_MARKER = 7
 
 
 class SourceEditor(stc.StyledTextCtrl):
@@ -14,8 +24,14 @@ class SourceEditor(stc.StyledTextCtrl):
         self.SetMarginType(2, wx.stc.STC_MASK_FOLDERS)
 
         self.SetLexer(stc.STC_LEX_CONTAINER)
-        self.StyleSetSpec(STYLE_DEFAULT, 'fore:#0000FF,back:#FFFFFF')
-        self.StyleSetSpec(STYLE_INSTRUCTION, 'fore:#FF0000,bold')
+        self.StyleSetSpec(STYLE_DEFAULT, 'fore:#000000,back:#FFFFFF')
+        self.StyleSetSpec(STYLE_INSTRUCTION, 'fore:#CD2990,bold')
+        self.StyleSetSpec(STYLE_ADDRESS, 'fore:#9370db')
+        self.StyleSetSpec(STYLE_HEX_NUMBER, 'fore:#9370db')
+        self.StyleSetSpec(STYLE_BINARY_NUMBER, 'fore:#9370db')
+        self.StyleSetSpec(STYLE_DECIMAL_NUMBER, 'fore:#9370db')
+        self.StyleSetSpec(STYLE_LABEL, 'fore:#00FF00,bold')
+        self.StyleSetSpec(STYLE_MARKER, 'fore:#FFA500')
 
         self.Bind(stc.EVT_STC_STYLENEEDED, self.OnStyle)
 
@@ -52,12 +68,13 @@ class ASMLexter(object):
             c = chr(buff.GetCharAt(startPos))
             curWord += c
             if c.isspace():
-                curWord = curWord.strip()
+                style = STYLE_DEFAULT
+                for i in range(7):
+                    if match(asm65_tokens[i]['regex'], curWord):
+                        style = i + 1
+                        break
 
-                if curWord.upper() in self._kw:
-                    style = STYLE_INSTRUCTION
-                else:
-                    style = STYLE_DEFAULT
+                curWord = curWord.strip()
 
                 wordStart = max(0, startPos - (len(curWord)))
                 buff.StartStyling(wordStart, 0x1f)
