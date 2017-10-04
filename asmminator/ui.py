@@ -98,6 +98,11 @@ class Frame(wx.Frame):
         self.SetMenuBar(self.menubar)
         self.Bind(wx.EVT_MENU, self.menuhandler)
 
+        from commands import commands
+        self.commands = []
+        for Command in commands.values():
+            self.commands.append(Command(self))
+
     def menuhandler(self, event):
         menu_id = event.GetId()
         if menu_id == wx.ID_EXIT:
@@ -106,11 +111,9 @@ class Frame(wx.Frame):
     def init_toolbar(self):
         # self.toolbar = self.CreateToolBar(wx.TB_TEXT, wx.TB_NOICONS, -1)
         self.toolbar = self.CreateToolBar()
-        from commands import commands
-        for Command in commands.values():
-            command = Command(self)
-            command.attach(self.toolbar, self)
-
+        for command in self.commands:
+            if command._toolbar:
+                command.attach(self.toolbar, self)
         self.toolbar.Realize()
 
     def run_command(self, event):

@@ -1,10 +1,15 @@
 import wx
+from collections import OrderedDict
 
 
 class Command(object):
     _icon = None
     _icon_image = None
     _label = 'command'
+    _toolbar = False
+
+    def __init__(self, ui):
+        self.ui = ui
 
     @property
     def icon(self):
@@ -23,9 +28,7 @@ class Command(object):
 class Run(Command):
     _label = 'Run'
     _icon_image = 'assets/icons/play.png'
-
-    def __init__(self, ui):
-        self.ui = ui
+    _toolbar = True
 
     def execute(self, event):
         self.ui.display.active_scene.paused = False
@@ -37,9 +40,7 @@ class Run(Command):
 class Pause(Command):
     _label = 'Pause'
     _icon_image = 'assets/icons/pause.png'
-
-    def __init__(self, ui):
-        self.ui = ui
+    _toolbar = True
 
     def execute(self, event):
         self.ui.display.active_scene.paused = not self.ui.display.active_scene.paused
@@ -48,16 +49,14 @@ class Pause(Command):
 class Step(Command):
     _label = 'Step'
     _icon_image = 'assets/icons/step_forward.png'
-
-    def __init__(self, ui):
-        self.ui = ui
+    _toolbar = True
 
     def execute(self, event):
         self.ui.display.active_scene.paused = True
         self.ui.display.active_scene.step = True
 
 
-commands = {}
+commands = OrderedDict()
 commands['run'] = Run
 commands['pause'] = Pause
 commands['step'] = Step
