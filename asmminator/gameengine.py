@@ -41,7 +41,7 @@ class AsmScene(Py65CPUBridge, SceneBase):
         self.cpu_pc(self.start_addr)
         for addr, val in enumerate(opcodes, start=self.start_addr):
             self.memory_set(addr, val)
-        self.stop_addr = addr
+        self.stop_addr = addr + 1
 
     def update(self, deltaTime):
         if self.cpu.pc < self.stop_addr and (
