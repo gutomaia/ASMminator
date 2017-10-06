@@ -85,7 +85,7 @@ class Pause(Command):
     _toolbar = True
     _menu = ('&Run', 1)
     _menu_id = 12754
-    _menu_label = 'Pause'
+    _menu_label = '&Pause'
 
 
     def execute(self, event):
@@ -98,7 +98,7 @@ class Step(Command):
     _toolbar = True
     _menu = ('&Run', 1)
     _menu_id = 12755
-    _menu_label = 'Step'
+    _menu_label = '&Step'
 
     def execute(self, event):
         self.ui.display.active_scene.paused = True
