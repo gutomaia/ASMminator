@@ -13,6 +13,9 @@ STYLE_DECIMAL_NUMBER = 5
 STYLE_LABEL = 6
 STYLE_MARKER = 7
 
+ANNOTATION_ERROR = 20
+ANNOTATION_WARN = 21
+
 
 class SourceEditor(stc.StyledTextCtrl):
     def __init__(self, parent, style=wx.SIMPLE_BORDER):
@@ -32,8 +35,19 @@ class SourceEditor(stc.StyledTextCtrl):
         self.StyleSetSpec(STYLE_DECIMAL_NUMBER, 'fore:#9370db')
         self.StyleSetSpec(STYLE_LABEL, 'fore:#00FF00,bold')
         self.StyleSetSpec(STYLE_MARKER, 'fore:#FFA500')
-
         self.Bind(stc.EVT_STC_STYLENEEDED, self.OnStyle)
+
+        self.AnnotationSetVisible(stc.STC_ANNOTATION_BOXED)
+        self.StyleSetSpec(ANNOTATION_ERROR, 'fore:#8B0000,bold,back:#FF967A')
+        self.StyleSetSpec(ANNOTATION_WARN, 'fore:#DD6A00,bold,back:#F5DEB3')
+
+    def set_error(self, line, message):
+        self.AnnotationSetText(line, message)
+        self.AnnotationSetStyle(line, ANNOTATION_ERROR)
+
+    def set_warnning(self, line, message):
+        self.AnnotationSetText(line, message)
+        self.AnnotationSetStyle(line, ANNOTATION_WARN)
 
     def SetLexer(self, lexer_id):
         if lexer_id == stc.STC_LEX_CONTAINER:
