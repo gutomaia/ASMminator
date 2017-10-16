@@ -80,7 +80,7 @@ class VarGrid(wx.grid.Grid):
 
     def __init__(self, parent):
         super(VarGrid, self).__init__(parent, -1)
-        self.CreateGrid(3, 3)
+        self.CreateGrid(len(self._vars), 3)
         self.parent = parent
         self.update()
 
