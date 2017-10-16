@@ -8,12 +8,21 @@ class SceneBase(object):
 
     def __init__(self):
         self.next = self
+        self.update_listener = []
 
     def input_opcodes(self, source, start_addr=0x00):
         pass
 
     def update(self, deltaTime):
         pass
+
+    def add_update_listener(self, _callable):
+        if _callable not in self.update_listener:
+            self.update_listener.append(_callable)
+
+    def call_update_listener(self):
+        for _callable in self.update_listener:
+            _callable()
 
     def render(self, screen):
         pass
@@ -49,6 +58,7 @@ class AsmScene(Py65CPUBridge, SceneBase):
                 (self.paused and self.step)
             ):
             self.execute()
+            self.call_update_listener()
             if self.step:
                 self.step = False
 

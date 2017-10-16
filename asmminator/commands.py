@@ -76,6 +76,7 @@ class Run(Command):
     def execute(self, event):
         self.ui.display.active_scene.paused = False
         self.ui.display.active_scene.step = False
+        self.ui.display.active_scene.add_update_listener(self.ui.vargrid.update)
         self.ui.commands['compile'].execute(event)
 
 

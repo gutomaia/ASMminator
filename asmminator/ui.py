@@ -1,4 +1,5 @@
 import wx, sys, os, pygame
+import wx.grid
 from collections import OrderedDict
 
 ### PYGAME IN WX ###
@@ -30,6 +31,7 @@ class PygameDisplay(wx.Window):
 
     def Update(self, event):
         self.Redraw()
+        self.parent
 
     def Redraw(self):
         if self.size_dirty:
@@ -70,6 +72,30 @@ class PygameDisplay(wx.Window):
         # This may or may not be necessary now that Pygame is just drawing to surfaces
         self.Unbind(event = wx.EVT_PAINT, handler = self.OnPaint)
         self.Unbind(event = wx.EVT_TIMER, handler = self.Update, source = self.timer)
+
+
+class VarGrid(wx.grid.Grid):
+
+    def __init__(self, parent):
+        super(VarGrid, self).__init__(parent, -1)
+        self.CreateGrid(3, 1)
+        self.SetCellValue(0, 0, 'Registers')
+        self.parent = parent
+        self.update()
+
+    def update(self):
+        scene = self.parent.display.active_scene
+        self.SetColLabelValue(0, 'Hex')
+
+
+        self.SetRowLabelValue(0, 'A')
+        self.SetCellValue(0, 0, '0x%0.2X' % scene.cpu_register('A'))
+
+        self.SetRowLabelValue(1, 'X')
+        self.SetCellValue(1, 0, '0x%0.2X' % scene.cpu_register('X'))
+
+        self.SetRowLabelValue(2, 'Y')
+        self.SetCellValue(2, 0, '0x%0.2X' % scene.cpu_register('Y'))
 
 
 class Frame(wx.Frame):
@@ -144,10 +170,17 @@ class Frame(wx.Frame):
 
         from editor import SourceEditor
         self.editor = SourceEditor(self)
+        self.vargrid = VarGrid(self)
 
         self.sizer = wx.BoxSizer(wx.VERTICAL)
         self.sizer.Add(self.display, 1, flag = wx.EXPAND)
-        self.sizer.Add(self.editor, 1, flag = wx.EXPAND)
+        self.sizer2 = wx.BoxSizer(wx.HORIZONTAL)
+        self.sizer.Add(self.sizer2, 1, wx.ALL|wx.EXPAND)
+
+
+
+        self.sizer2.Add(self.editor, 1, flag = wx.EXPAND)
+        self.sizer2.Add(self.vargrid, 1, flag = wx.EXPAND)
 
         self.SetAutoLayout(True)
         self.SetSizer(self.sizer)
