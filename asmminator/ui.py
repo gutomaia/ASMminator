@@ -76,7 +76,7 @@ class PygameDisplay(wx.Window):
 
 class VarGrid(wx.grid.Grid):
 
-    _vars = ['A', 'X', 'Y']
+    _vars = ['A', 'X', 'Y', 'P', 'SP', 'PC']
 
     def __init__(self, parent):
         super(VarGrid, self).__init__(parent, -1)
