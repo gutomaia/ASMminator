@@ -76,26 +76,25 @@ class PygameDisplay(wx.Window):
 
 class VarGrid(wx.grid.Grid):
 
+    _vars = ['A', 'X', 'Y']
+
     def __init__(self, parent):
         super(VarGrid, self).__init__(parent, -1)
-        self.CreateGrid(3, 1)
-        self.SetCellValue(0, 0, 'Registers')
+        self.CreateGrid(3, 2)
         self.parent = parent
         self.update()
 
     def update(self):
         scene = self.parent.display.active_scene
         self.SetColLabelValue(0, 'Hex')
+        self.SetColLabelValue(1, 'Dec')
 
+        for index, var in enumerate(self._vars):
+            value = scene.cpu_register(var)
+            self.SetRowLabelValue(index, var)
+            self.SetCellValue(index, 0, '0x%0.2X' % value)
+            self.SetCellValue(index, 1, '%s' % value)
 
-        self.SetRowLabelValue(0, 'A')
-        self.SetCellValue(0, 0, '0x%0.2X' % scene.cpu_register('A'))
-
-        self.SetRowLabelValue(1, 'X')
-        self.SetCellValue(1, 0, '0x%0.2X' % scene.cpu_register('X'))
-
-        self.SetRowLabelValue(2, 'Y')
-        self.SetCellValue(2, 0, '0x%0.2X' % scene.cpu_register('Y'))
 
 
 class Frame(wx.Frame):
