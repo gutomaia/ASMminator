@@ -95,7 +95,7 @@ class VarGrid(wx.grid.Grid):
             self.SetRowLabelValue(index, var)
             self.SetCellValue(index, 0, '0x%0.2X' % value)
             self.SetCellValue(index, 1, '%s' % value)
-            self.SetCellValue(index, 2, '{0:b}'.format(value))
+            self.SetCellValue(index, 2, '{0:08b}'.format(value))
 
 
 class Frame(wx.Frame):
