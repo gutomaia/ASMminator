@@ -80,7 +80,7 @@ class VarGrid(wx.grid.Grid):
 
     def __init__(self, parent):
         super(VarGrid, self).__init__(parent, -1)
-        self.CreateGrid(3, 2)
+        self.CreateGrid(3, 3)
         self.parent = parent
         self.update()
 
@@ -88,13 +88,14 @@ class VarGrid(wx.grid.Grid):
         scene = self.parent.display.active_scene
         self.SetColLabelValue(0, 'Hex')
         self.SetColLabelValue(1, 'Dec')
+        self.SetColLabelValue(2, 'Bin')
 
         for index, var in enumerate(self._vars):
             value = scene.cpu_register(var)
             self.SetRowLabelValue(index, var)
             self.SetCellValue(index, 0, '0x%0.2X' % value)
             self.SetCellValue(index, 1, '%s' % value)
-
+            self.SetCellValue(index, 2, '{0:b}'.format(value))
 
 
 class Frame(wx.Frame):
