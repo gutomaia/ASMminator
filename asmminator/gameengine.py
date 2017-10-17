@@ -1,4 +1,4 @@
-from ui import PygameDisplay
+from display import PygameDisplay
 import pygame
 from bridge import Py65CPUBridge
 from py65.devices.mpu6502 import MPU
