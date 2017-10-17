@@ -95,8 +95,8 @@ class Goal(AsmScene):
 
 class DisplayScene(PygameDisplay):
 
-    def __init__(self, parent, ID, starting_scene=None):
-        super(DisplayScene, self).__init__(parent, ID)
+    def __init__(self, parent, starting_scene=None):
+        super(DisplayScene, self).__init__(parent)
 
         if not starting_scene:
             self.active_scene = Level1()

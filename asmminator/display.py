@@ -7,9 +7,10 @@ import pygame
 # Patch for cross-platform support by Sean McKean, 16/07/2010
 # Patch to fix redrawing issue by David Barker, 20/07/2010
 # Second window demo added by David Barker, 21/07/2010
-class PygameDisplay(wx.Window):
-    def __init__(self, parent, ID):
-        wx.Window.__init__(self, parent, ID)
+class PygameDisplay(wx.Panel):
+    def __init__(self, parent):
+        super(PygameDisplay, self).__init__(parent)
+
         self.parent = parent
         self.hwnd = self.GetHandle()
 

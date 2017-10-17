@@ -85,7 +85,7 @@ class Frame(wx.Frame):
         self.init_toolbar()
         self.init_statusbar()
 
-        self.display = DisplayScene(self, -1)
+        self.display = DisplayScene(self)
 
         self.Bind(wx.EVT_CLOSE, self.Kill)
 
