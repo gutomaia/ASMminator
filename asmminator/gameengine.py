@@ -38,11 +38,7 @@ class AsmScene(Py65CPUBridge, SceneBase):
 
     def __init__(self):
         super(AsmScene, self).__init__()
-        self.cpu = MPU()
-        self.start_addr = 0
-        self.stop_addr = 0
-        self.paused = False
-        self.step = False
+        self.reset()
 
     def input_opcodes(self, opcodes, start_addr=0xC000):
         addr = 0
@@ -62,46 +58,19 @@ class AsmScene(Py65CPUBridge, SceneBase):
             if self.step:
                 self.step = False
 
-
-class Level1(AsmScene):
-
-    def __init__(self):
-        super(Level1, self).__init__()
-        self.aim = [100, 100]
-        self.target = [400, 100]
-
-    def update(self, deltaTime):
-        super(Level1, self).update(deltaTime)
-        if self.memory_fetch(0x0010) == 0x0001:
-            self.aim[0] += 1
-            self.memory_set(0x0010, 0x00)
-
-        if self.aim == self.target:
-            self.go_to_scene(Goal())
-
-
-    def render(self, screen):
-        screen.fill((0, 0, 0))
-        pygame.draw.circle(screen, (255, 0, 0), self.aim, 5)
-        pygame.draw.circle(screen, (0, 255, 0), self.target, 5)
-
-
-
-class Goal(AsmScene):
-
-    def render(self, screen):
-        screen.fill((0, 255, 0))
+    def reset(self):
+        self.cpu = MPU()
+        self.start_addr = 0
+        self.stop_addr = 0
+        self.paused = False
+        self.step = False
 
 
 class DisplayScene(PygameDisplay):
 
-    def __init__(self, parent, starting_scene=None):
+    def __init__(self, parent, starting_scene):
         super(DisplayScene, self).__init__(parent)
-
-        if not starting_scene:
-            self.active_scene = Level1()
-        else:
-            self.active_scene = starting_scene
+        self.active_scene = starting_scene
 
     def pygame_redraw(self, deltaTime):
         self.active_scene.update(deltaTime)

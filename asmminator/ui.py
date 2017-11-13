@@ -72,7 +72,7 @@ class Frame(wx.Frame):
         self.statusbar.SetStatusText("ASMminator", 0)
         self.statusbar.SetStatusText("Look, it's a nifty status bar!!!", 1)
 
-    def __init__(self, parent):
+    def __init__(self, parent, starting_scene):
         wx.Frame.__init__(self, parent, -1, size = (600, 600))
         self.SetTitle("ASMminator")
 
@@ -85,7 +85,7 @@ class Frame(wx.Frame):
         self.init_toolbar()
         self.init_statusbar()
 
-        self.display = DisplayScene(self)
+        self.display = DisplayScene(self, starting_scene)
 
         self.Bind(wx.EVT_CLOSE, self.Kill)
 
