@@ -27,7 +27,6 @@ class Py65CPUBridge(object):
         self.cpu.pc = counter
 
     def memory_set(self, pos, val):
-        print('memory_set {:04x}, {:02x}'.format(pos, val))
         self.cpu.memory[pos] = val
 
     def memory_fetch(self, pos):
@@ -35,11 +34,9 @@ class Py65CPUBridge(object):
 
     def execute(self):
         self.cpu.step()
-        print(self.cpu)
         return self.cpu.processorCycles, None
 
     def cpu_set_register(self, register, value):
-        print('cpu_set_register {}, {:02x}'.format(register, value))
         name = REGISTERS[register]
         setattr(self.cpu, name, value)
 
@@ -52,10 +49,8 @@ class Py65CPUBridge(object):
         return not not (self.cpu.p & bit)
 
     def cpu_set_flag(self, flag):
-        print('cpu_set_flag', flag)
         bit = FLAGS[flag]
         self.cpu.p |= bit
-        print(self.cpu)
 
     def cpu_unset_flag(self, flag):
         mask = ~ FLAGS[flag]
