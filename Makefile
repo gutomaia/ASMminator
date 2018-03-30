@@ -87,7 +87,12 @@ ${DOWNLOAD_PATH}/glyphicons_free.zip: ${DOWNLOAD_PATH}/.done
 	${CHECK}
 	@touch $@
 
-${TOOLS_PATH}/glyphicons_free/.done: ${DOWNLOAD_PATH}/glyphicons_free.zip
+${TOOLS_PATH}/.done:
+	@echo "Creating tools path: \c"
+	@mkdir -p ${TOOLS_PATH}
+	${CHECK}
+
+${TOOLS_PATH}/glyphicons_free/.done: ${DOWNLOAD_PATH}/glyphicons_free.zip ${TOOLS_PATH}/.done
 	@echo "Unpacking glyphicons_free.zip: \c"
 	@cd ${TOOLS_PATH} && \
 		unzip -qq ../${DOWNLOAD_PATH}/glyphicons_free.zip && \
