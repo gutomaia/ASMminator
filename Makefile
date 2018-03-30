@@ -95,7 +95,7 @@ ${TOOLS_PATH}/.done:
 ${TOOLS_PATH}/glyphicons_free/.done: ${DOWNLOAD_PATH}/glyphicons_free.zip ${TOOLS_PATH}/.done
 	@echo "Unpacking glyphicons_free.zip: \c"
 	@cd ${TOOLS_PATH} && \
-		unzip -qq ../${DOWNLOAD_PATH}/glyphicons_free.zip && \
+		unzip -qq -o ../${DOWNLOAD_PATH}/glyphicons_free.zip && \
 		cd .. && touch $@
 	${CHECK}
 
