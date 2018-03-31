@@ -70,7 +70,7 @@ class Frame(wx.Frame):
         self.statusbar.SetFieldsCount(3)
         self.statusbar.SetStatusWidths([-3, -4, -2])
         self.statusbar.SetStatusText("ASMminator", 0)
-        self.statusbar.SetStatusText("Look, it's a nifty status bar!!!", 1)
+        self.statusbar.SetStatusText("", 1)
 
     def __init__(self, parent, starting_scene):
         wx.Frame.__init__(self, parent, -1, size = (600, 600))
