@@ -151,7 +151,7 @@ purge: clean python_purge
 	@rm pyinstaller.mk
 	@rm -rf deps
 	@rm -rf ${WINE_PATH}
-	@rm -rf .downloads
-	@rm -rf .tools
+	@rm -rf ${DOWNLOAD_PATH}
+	@rm -rf ${TOOLS_PATH}
 
 .PHONY: clean run dist report
